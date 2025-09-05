@@ -164,3 +164,5 @@ __tests__/
 # Build artifacts
 dist/
 build/
+
+/src/generated/prisma
