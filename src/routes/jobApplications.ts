@@ -13,10 +13,13 @@ router.get("/", async (req, res) => {
       },
     });
     res.json(applications);
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Failed to fetch job applications",
-      error: error.message,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch job applications",
     });
   }
 });
@@ -44,7 +47,9 @@ router.post("/", async (req, res) => {
         company: validatedData.company,
         jobTitle: validatedData.jobTitle,
         status: validatedData.status,
-        dateApplied: new Date(validatedData.dateApplied),
+        dateApplied: validatedData.dateApplied
+          ? new Date(validatedData.dateApplied)
+          : undefined,
         jobPostUrl: validatedData.jobPostUrl,
         notes: validatedData.notes,
         salary: validatedData.salary,
@@ -53,10 +58,13 @@ router.post("/", async (req, res) => {
     });
 
     res.status(201).json(application);
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Failed to create job application",
-      error: error.message,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to create job application",
     });
   }
 });

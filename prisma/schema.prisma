@@ -19,7 +19,7 @@ model JobApplication {
   company       String   
   jobTitle      String
   status        ApplicationStatus @default(APPLIED)
-  dateApplied   DateTime
+  dateApplied   DateTime?
   jobPostUrl    String?
   notes         String?
   salary        String?  
