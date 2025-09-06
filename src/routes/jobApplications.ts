@@ -1,13 +1,22 @@
 import { Router } from "express";
 import { prisma } from "../utils/db";
 import { createJobApplicationSchema } from "../schemas/jobApplication";
+import { requireAuth } from "../middleware/auth";
 
 const router = Router();
 
-// GET /api/job-applications - Get all job applications
-router.get("/", async (req, res) => {
+// GET /api/job-applications - Get user's job applications
+router.get("/", requireAuth, async (req, res) => {
   try {
+    const userId = req.session.userInfo?.sub;
+    if (!userId) {
+      return res.status(401).json({ error: "User ID not found in session" });
+    }
+
     const applications = await prisma.jobApplication.findMany({
+      where: {
+        userId: userId,
+      },
       orderBy: {
         dateApplied: "desc",
       },
@@ -25,8 +34,13 @@ router.get("/", async (req, res) => {
 });
 
 // POST /api/job-applications - Create a new job application
-router.post("/", async (req, res) => {
+router.post("/", requireAuth, async (req, res) => {
   try {
+    const userId = req.session.userInfo?.sub;
+    if (!userId) {
+      return res.status(401).json({ error: "User ID not found in session" });
+    }
+
     // Validate request body with Zod
     const validationResult = createJobApplicationSchema.safeParse(req.body);
 
@@ -44,6 +58,7 @@ router.post("/", async (req, res) => {
 
     const application = await prisma.jobApplication.create({
       data: {
+        userId: userId,
         company: validatedData.company,
         jobTitle: validatedData.jobTitle,
         status: validatedData.status,
