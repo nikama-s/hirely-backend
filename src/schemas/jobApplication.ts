@@ -11,7 +11,8 @@ export const createJobApplicationSchema = z.object({
   dateApplied: z.iso.datetime("Invalid date format").or(z.date()).optional(),
   jobPostUrl: z.url("Invalid URL format").optional().or(z.literal("")),
   notes: z.string().optional(),
-  salary: z.string().optional(),
+  salary_from: z.number().optional(),
+  salary_to: z.number().optional(),
   location: z.string().optional(),
 });
 

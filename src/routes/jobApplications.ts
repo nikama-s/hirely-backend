@@ -52,7 +52,8 @@ router.post("/", async (req, res) => {
           : undefined,
         jobPostUrl: validatedData.jobPostUrl,
         notes: validatedData.notes,
-        salary: validatedData.salary,
+        salary_from: validatedData.salary_from,
+        salary_to: validatedData.salary_to,
         location: validatedData.location,
       },
     });

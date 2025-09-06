@@ -14,7 +14,8 @@ async function main() {
       dateApplied: new Date("2024-01-15"),
       jobPostUrl: "https://careers.google.com/jobs/results/123456",
       notes: "Applied through referral from John",
-      salary: "$120,000 - $150,000",
+      salary_from: 120000,
+      salary_to: 150000,
       location: "Mountain View, CA",
     },
     {
@@ -24,7 +25,8 @@ async function main() {
       dateApplied: new Date("2024-01-10"),
       jobPostUrl: "https://careers.microsoft.com/jobs/789012",
       notes: "Phone interview scheduled for next week",
-      salary: "$100,000 - $130,000",
+      salary_from: 100000,
+      salary_to: 130000,
       location: "Seattle, WA",
     },
     {
@@ -34,7 +36,8 @@ async function main() {
       dateApplied: new Date("2024-01-05"),
       jobPostUrl: "https://jobs.apple.com/345678",
       notes: "Not enough experience with SwiftUI",
-      salary: "$110,000 - $140,000",
+      salary_from: 110000,
+      salary_to: 140000,
       location: "Cupertino, CA",
     },
     {
@@ -44,7 +47,8 @@ async function main() {
       dateApplied: new Date("2023-12-20"),
       jobPostUrl: "https://jobs.netflix.com/901234",
       notes: "Great culture fit, considering the offer",
-      salary: "$130,000 - $160,000",
+      salary_from: 130000,
+      salary_to: 160000,
       location: "Los Gatos, CA",
     },
     {
@@ -54,7 +58,8 @@ async function main() {
       dateApplied: new Date("2024-01-20"),
       jobPostUrl: "https://careers.meta.com/567890",
       notes: "Found this job posting, need to apply",
-      salary: "$115,000 - $145,000",
+      salary_from: 115000,
+      salary_to: 145000,
       location: "Menlo Park, CA",
     },
     {
@@ -64,7 +69,8 @@ async function main() {
       dateApplied: new Date("2023-12-01"),
       jobPostUrl: "https://amazon.jobs/234567",
       notes: "Applied 2 months ago, no response",
-      salary: "$105,000 - $135,000",
+      salary_from: 105000,
+      salary_to: 135000,
       location: "Seattle, WA",
     },
   ];

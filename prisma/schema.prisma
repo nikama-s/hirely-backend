@@ -22,7 +22,8 @@ model JobApplication {
   dateApplied   DateTime?
   jobPostUrl    String?
   notes         String?
-  salary        String?  
+  salary_from   Int?
+  salary_to     Int?
   location      String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
