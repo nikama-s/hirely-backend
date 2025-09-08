@@ -5,7 +5,9 @@ import { prisma } from "./utils/db";
 import { authClient } from "./utils/auth";
 import { sessionMiddleware } from "./utils/session";
 import authRouter from "./routes/auth";
+import userRouter from "./routes/user";
 import jobApplicationsRouter from "./routes/jobApplications";
+import adminRouter from "./routes/admin";
 
 dotenv.config();
 
@@ -36,7 +38,9 @@ app.get("/health", async (req, res) => {
 
 // Routes
 app.use("/", authRouter);
+app.use("/api/user", userRouter);
 app.use("/api/job-applications", jobApplicationsRouter);
+app.use("/api/admin", adminRouter);
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,12 +1,5 @@
 import { Issuer, Client } from "openid-client";
-
-export interface AuthConfig {
-  issuerUrl: string;
-  clientId: string;
-  clientSecret: string;
-  redirectUri: string;
-  responseTypes: string[];
-}
+import { AuthConfig } from "../types/auth";
 
 export class AuthClient {
   private client: Client | null = null;
