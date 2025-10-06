@@ -16,6 +16,7 @@ datasource db {
 
 model JobApplication {
   id            Int      @id @default(autoincrement())
+  userId        String   // Cognito user ID (sub)
   company       String   
   jobTitle      String
   status        ApplicationStatus @default(APPLIED)
