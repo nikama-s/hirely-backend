@@ -1,5 +1,14 @@
 import { z } from "zod";
-import { ApplicationStatus } from "../generated/prisma";
+
+export enum ApplicationStatus {
+  NOT_APPLIED = "NOT_APPLIED",
+  APPLIED = "APPLIED",
+  INTERVIEW = "INTERVIEW",
+  REJECTED = "REJECTED",
+  OFFERED = "OFFERED",
+  ACCEPTED = "ACCEPTED",
+  GHOSTED = "GHOSTED",
+}
 
 const ApplicationStatusEnum = z.enum(ApplicationStatus);
 
@@ -7,7 +16,7 @@ const ApplicationStatusEnum = z.enum(ApplicationStatus);
 export const createJobApplicationSchema = z.object({
   company: z.string().min(1, "Company name is required"),
   jobTitle: z.string().min(1, "Job title is required"),
-  status: ApplicationStatusEnum.optional().default("APPLIED"),
+  status: ApplicationStatusEnum.optional().default(ApplicationStatus.APPLIED),
   dateApplied: z.iso.datetime("Invalid date format").or(z.date()).optional(),
   jobPostUrl: z.url("Invalid URL format").optional().or(z.literal("")),
   notes: z.string().optional(),
