@@ -1,22 +1,35 @@
-import { CognitoService } from "./cognitoService";
+import { prisma } from "../utils/db";
 import { AdminUserResponse } from "../types/admin";
 
 export class AdminService {
   static async getUsers(
     limit: number = 50,
-    nextToken?: string
+    cursor?: string
   ): Promise<AdminUserResponse> {
     try {
-      const [result, totalCount] = await Promise.all([
-        CognitoService.getUsers(limit, nextToken),
-        CognitoService.getUserCount(),
+      const [users, totalCount] = await Promise.all([
+        prisma.user.findMany({
+          take: limit,
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            email: true,
+            isAdmin: true,
+            createdAt: true,
+            updatedAt: true
+          }
+        }),
+        prisma.user.count(),
       ]);
 
+      const nextCursor = users.length === limit ? users[users.length - 1].id : undefined;
+
       return {
-        users: result.users,
+        users: users,
         totalCount: totalCount,
-        nextToken: result.nextToken,
-        hasMore: !!result.nextToken,
+        nextToken: nextCursor,
+        hasMore: !!nextCursor,
       };
     } catch (error) {
       console.error("Error in AdminService.getUsers:", error);

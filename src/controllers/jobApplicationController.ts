@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
-import { UserService } from "../services/userService";
 import { JobApplicationService } from "../services/jobApplicationService";
 
 export class JobApplicationController {
   // GET /api/job-applications - Get user's job applications
   static getJobApplications = async (req: Request, res: Response) => {
     try {
-      const userId = UserService.getUserIdFromSession(req.session.userInfo);
+      const userId = req.user?.id;
       if (!userId) {
-        return res.status(401).json({ error: "User ID not found in session" });
+        return res.status(401).json({ error: "User not authenticated" });
       }
 
       const applications = await JobApplicationService.getUserJobApplications(
@@ -29,9 +28,9 @@ export class JobApplicationController {
   // POST /api/job-applications - Create a new job application
   static createJobApplication = async (req: Request, res: Response) => {
     try {
-      const userId = UserService.getUserIdFromSession(req.session.userInfo);
+      const userId = req.user?.id;
       if (!userId) {
-        return res.status(401).json({ error: "User ID not found in session" });
+        return res.status(401).json({ error: "User not authenticated" });
       }
 
       const application = await JobApplicationService.createJobApplication(

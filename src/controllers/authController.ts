@@ -1,78 +1,66 @@
 import { Request, Response } from "express";
-import { generators } from "openid-client";
-import { authClient } from "../utils/auth";
 import { AuthService } from "../services/authService";
-import { CognitoService } from "../services/cognitoService";
 
 export class AuthController {
-  // Home route with authentication check
-  static getHome = (req: Request, res: Response) => {
-    res.json({
-      message: "Welcome to Hirely API",
-      isAuthenticated: req.isAuthenticated,
-      userInfo: req.session.userInfo,
-      loginUrl: "/login",
-      logoutUrl: "/logout",
-    });
-  };
-
-  // Login route
-  static login = (req: Request, res: Response) => {
-    const nonce = generators.nonce();
-    const state = generators.state();
-
-    req.session.nonce = nonce;
-    req.session.state = state;
-
-    const authUrl = AuthService.generateAuthUrl(nonce, state);
-    res.redirect(authUrl);
-  };
-
-  // Callback route
-  static callback = async (req: Request, res: Response) => {
+  static register = async (req: Request, res: Response) => {
     try {
-      const client = authClient.getClient();
-      const params = client.callbackParams(req);
+      const { email, password, isAdmin } = req.body;
+      const token = await AuthService.register({
+        email,
+        password,
+        isAdmin
+      });
 
-      const userInfo = await AuthService.handleCallback(
-        params,
-        req.session.nonce!,
-        req.session.state!
-      );
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        sameSite: "lax",
+        path: "/"
+      });
 
-      // Fetch user groups to determine admin status
-      const userGroups = await CognitoService.getUserGroups(userInfo.sub);
-      const isAdmin = userGroups.includes("admin");
-
-      req.session.userInfo = {
-        ...userInfo,
-        isAdmin,
-      };
-
-      const frontendUrl = AuthService.getFrontendUrl();
-      res.redirect(`${frontendUrl}/applications`);
-    } catch (err) {
-      console.error("Callback error:", err);
-      const frontendUrl = AuthService.getFrontendUrl();
-      res.redirect(frontendUrl);
+      res.status(201).json({ message: "User created successfully" });
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
     }
   };
 
-  // Logout route
-  static logout = (req: Request, res: Response) => {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error("Session destruction error:", err);
-      }
-    });
+  static login = async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
+      const { user, token } = await AuthService.login({ email, password });
 
-    const logoutUrl = AuthService.getLogoutUrl();
-    res.redirect(logoutUrl);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        sameSite: "lax",
+        path: "/"
+      });
+
+      res.json({
+        user: {
+          id: user.id,
+          email: user.email,
+          isAdmin: user.isAdmin
+        }
+      });
+    } catch (error: any) {
+      res.status(401).json({ error: error.message });
+    }
   };
 
-  // API logout route
-  static apiLogout = (req: Request, res: Response) => {
-    const frontendUrl = AuthService.getFrontendUrl();
-    res.redirect(frontendUrl);
+  static logout = (req: Request, res: Response) => {
+    res.clearCookie("token", { path: "/" });
+    res.json({ message: "Logged out successfully" });
+  };
+
+  static me = (req: Request, res: Response) => {
+    const user = req.user;
+    if (user) {
+      res.json({ user });
+    } else {
+      res.status(401).json({ error: "Not authenticated" });
+    }
   };
 }

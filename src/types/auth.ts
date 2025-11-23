@@ -1,15 +1,11 @@
-export interface AuthConfig {
-  issuerUrl: string;
-  clientId: string;
-  clientSecret: string;
-  redirectUri: string;
-  responseTypes: string[];
+export interface UserInfo {
+  id: string;
+  email: string;
+  isAdmin: boolean;
 }
 
-export interface UserInfo {
-  sub: string;
-  email?: string;
-  name?: string;
+export interface JwtPayload {
+  id: string;
+  email: string;
   isAdmin: boolean;
-  [key: string]: any;
 }

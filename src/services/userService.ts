@@ -1,21 +1,21 @@
-import { transformCognitoUser } from "../utils/userTransform";
+import { UserInfo } from "../types/auth";
 
 export class UserService {
-  static getUserInfo(sessionUserInfo: any) {
-    if (sessionUserInfo) {
+  static getUserInfo(user: UserInfo | undefined | null) {
+    if (user) {
       return {
-        user: transformCognitoUser(sessionUserInfo),
-        isAuthenticated: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          isAdmin: user.isAdmin
+        },
+        isAuthenticated: true
       };
     } else {
       return {
         user: null,
-        isAuthenticated: false,
+        isAuthenticated: false
       };
     }
-  }
-
-  static getUserIdFromSession(sessionUserInfo: any): string | null {
-    return sessionUserInfo?.sub || null;
   }
 }
