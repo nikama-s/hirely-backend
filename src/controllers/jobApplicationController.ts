@@ -20,7 +20,7 @@ export class JobApplicationController {
         error:
           error instanceof Error
             ? error.message
-            : "Failed to fetch job applications",
+            : "Failed to fetch job applications"
       });
     }
   };
@@ -42,7 +42,7 @@ export class JobApplicationController {
       if (error.status) {
         return res.status(error.status).json({
           message: error.message,
-          errors: error.errors,
+          errors: error.errors
         });
       }
 
@@ -51,7 +51,43 @@ export class JobApplicationController {
         error:
           error instanceof Error
             ? error.message
-            : "Failed to create job application",
+            : "Failed to create job application"
+      });
+    }
+  };
+
+  static updateJobApplication = async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      const applicationId = parseInt(req.params.id);
+      if (isNaN(applicationId)) {
+        return res.status(400).json({ error: "Invalid application ID" });
+      }
+
+      const application = await JobApplicationService.updateJobApplication(
+        userId,
+        applicationId,
+        req.body
+      );
+      res.json(application);
+    } catch (error: any) {
+      if (error.status) {
+        return res.status(error.status).json({
+          message: error.message,
+          errors: error.errors
+        });
+      }
+
+      res.status(500).json({
+        message: "Failed to update job application",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to update job application"
       });
     }
   };

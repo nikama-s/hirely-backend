@@ -10,4 +10,7 @@ router.get("/", requireAuth, JobApplicationController.getJobApplications);
 // POST /api/job-applications - Create a new job application
 router.post("/", requireAuth, JobApplicationController.createJobApplication);
 
+// PUT /api/job-applications/:id - Update a job application
+router.put("/:id", requireAuth, JobApplicationController.updateJobApplication);
+
 export default router;
