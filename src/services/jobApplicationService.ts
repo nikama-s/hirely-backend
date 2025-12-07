@@ -103,4 +103,26 @@ export class JobApplicationService {
       }
     });
   }
+
+  static async deleteJobApplication(userId: string, applicationId: number) {
+    const existingApplication = await prisma.jobApplication.findFirst({
+      where: {
+        id: applicationId,
+        userId: userId
+      }
+    });
+
+    if (!existingApplication) {
+      throw {
+        status: 404,
+        message: "Job application not found"
+      };
+    }
+
+    return await prisma.jobApplication.delete({
+      where: {
+        id: applicationId
+      }
+    });
+  }
 }

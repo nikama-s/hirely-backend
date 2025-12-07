@@ -13,4 +13,11 @@ router.post("/", requireAuth, JobApplicationController.createJobApplication);
 // PUT /api/job-applications/:id - Update a job application
 router.put("/:id", requireAuth, JobApplicationController.updateJobApplication);
 
+// DELETE /api/job-applications/:id - Delete a job application
+router.delete(
+  "/:id",
+  requireAuth,
+  JobApplicationController.deleteJobApplication
+);
+
 export default router;

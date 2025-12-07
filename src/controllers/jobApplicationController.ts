@@ -91,4 +91,35 @@ export class JobApplicationController {
       });
     }
   };
+
+  static deleteJobApplication = async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      const applicationId = parseInt(req.params.id);
+      if (isNaN(applicationId)) {
+        return res.status(400).json({ error: "Invalid application ID" });
+      }
+
+      await JobApplicationService.deleteJobApplication(userId, applicationId);
+      res.status(204).send();
+    } catch (error: any) {
+      if (error.status) {
+        return res.status(error.status).json({
+          message: error.message
+        });
+      }
+
+      res.status(500).json({
+        message: "Failed to delete job application",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to delete job application"
+      });
+    }
+  };
 }
