@@ -7,6 +7,7 @@ import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import jobApplicationsRouter from "./routes/jobApplications";
 import adminRouter from "./routes/admin";
+import analyticsRouter from "./routes/analytics";
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use("/", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/job-applications", jobApplicationsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/analytics", analyticsRouter);
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
 
